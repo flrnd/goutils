@@ -36,6 +36,7 @@ func parseArgs(args []string) (string, string) {
 func found(keyword, location string) chan string {
 	c := make(chan string)
 	go func() {
+		defer close(c)
 		filepath.WalkDir(location, func(path string, d os.DirEntry, e error) (err error) {
 			if e != nil {
 				return e
@@ -49,7 +50,6 @@ func found(keyword, location string) chan string {
 			}
 			return
 		})
-		defer close(c)
 	}()
 	return c
 }

@@ -30,19 +30,19 @@ func getCommandPath(file string) (string, error) {
 	return "", errors.New(errorMessage)
 }
 
-func handleArguments(list []string) {
+func handleArguments(argumentList []string) {
 	var waitGroup sync.WaitGroup
 
-	for _, arg := range list {
+	for _, argument := range argumentList {
 		waitGroup.Add(1)
-		go func(arg string) {
+		go func(command string) {
 			defer waitGroup.Done()
-			found, err := getCommandPath(arg)
+			found, err := getCommandPath(command)
 			if err != nil {
 				fmt.Printf("%s", err)
 			}
 			fmt.Printf("%s\n", found)
-		}(arg)
+		}(argument)
 	}
 	waitGroup.Wait()
 }

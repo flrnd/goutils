@@ -48,6 +48,6 @@ func main() {
 	case len(arguments) > 1:
 		findCommands(arguments[1:])
 	default:
-		fmt.Println("This should not happen: %s!", arguments)
+		fmt.Printf("This should not happen: %s!", arguments)
 	}
 }

@@ -16,12 +16,19 @@ func main() {
 	}
 }
 
+func printHelp(arg string) {
+	fmt.Printf("found v0.1\n")
+	fmt.Printf("Find all matching files and directories that contains a given keyword.\n\n")
+	fmt.Printf("Usage: %s keyword path\n", arg)
+	fmt.Printf("Example: %s config /etc\n", arg)
+}
+
 func parseArgs(args []string) (string, string) {
 	switch {
 	case len(args) == 2:
 		return args[0], args[1]
 	default:
-		fmt.Println("help")
+		printHelp("found")
 	}
 	return "", ""
 }

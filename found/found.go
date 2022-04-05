@@ -10,7 +10,7 @@ import (
 func main() {
 	arguments := os.Args
 	keyword, location := parseArgs(arguments[1:])
-	channels := find(keyword, location)
+	channels := found(keyword, location)
 	for msg := range channels {
 		fmt.Println(msg)
 	}
@@ -26,7 +26,7 @@ func parseArgs(args []string) (string, string) {
 	return "", ""
 }
 
-func find(keyword, location string) chan string {
+func found(keyword, location string) chan string {
 	c := make(chan string)
 	go func() {
 		filepath.WalkDir(location, func(path string, d os.DirEntry, e error) (err error) {

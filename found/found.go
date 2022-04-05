@@ -41,7 +41,11 @@ func found(keyword, location string) chan string {
 				return e
 			}
 			if strings.Contains(path, keyword) {
-				c <- path
+				if d.IsDir() {
+					c <- fmt.Sprintf("%s/", path)
+				} else {
+					c <- path
+				}
 			}
 			return
 		})

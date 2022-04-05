@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"sync"
 )
 
 func getCommandPath(file string) (string, error) {
@@ -29,14 +30,21 @@ func getCommandPath(file string) (string, error) {
 	return "", errors.New(errorMessage)
 }
 
-func findCommands(arguments []string) {
-	for _, arg := range arguments {
-		found, err := getCommandPath(arg)
-		if err != nil {
-			fmt.Printf("%s", err)
-		}
-		fmt.Println(found)
+func handleArguments(list []string) {
+	var waitGroup sync.WaitGroup
+
+	for _, arg := range list {
+		waitGroup.Add(1)
+		go func(arg string) {
+			defer waitGroup.Done()
+			found, err := getCommandPath(arg)
+			if err != nil {
+				fmt.Printf("%s", err)
+			}
+			fmt.Printf("%s\n", found)
+		}(arg)
 	}
+	waitGroup.Wait()
 }
 
 func main() {
@@ -46,7 +54,7 @@ func main() {
 	case len(arguments) == 1:
 		fmt.Println("Need more arguments")
 	case len(arguments) > 1:
-		findCommands(arguments[1:])
+		handleArguments(arguments[1:])
 	default:
 		fmt.Printf("This should not happen: %s!", arguments)
 	}

@@ -47,7 +47,7 @@ func found(keyword, location string) chan string {
 	blue := color.New(color.FgBlue, color.Bold).SprintFunc()
 	go func() {
 		defer close(c)
-		err := filepath.WalkDir(location, func(path string, d fs.DirEntry, err error) error {
+		filepath.WalkDir(location, func(path string, d fs.DirEntry, err error) error {
 			if strings.Contains(path, keyword) {
 				if d.IsDir() {
 					c <- blue(path)
@@ -56,11 +56,12 @@ func found(keyword, location string) chan string {
 					c <- fmt.Sprintf("%s%s", blue(directory), file)
 				}
 			}
-			return err
+			if err != nil {
+				fmt.Printf("%s\n", err)
+			}
+
+			return nil // return err will stop walkDir
 		})
-		if err != nil {
-			fmt.Printf("%s\n", err)
-		}
 	}()
 	return c
 }

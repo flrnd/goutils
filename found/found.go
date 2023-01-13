@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"strings"
@@ -46,11 +47,7 @@ func found(keyword, location string) chan string {
 	blue := color.New(color.FgBlue, color.Bold).SprintFunc()
 	go func() {
 		defer close(c)
-		filepath.WalkDir(location, func(path string, d os.DirEntry, e error) (err error) {
-
-			if e != nil {
-				return e
-			}
+		filepath.WalkDir(location, func(path string, d fs.DirEntry, err error) error {
 			if strings.Contains(path, keyword) {
 				if d.IsDir() {
 					c <- blue(path)
@@ -59,7 +56,8 @@ func found(keyword, location string) chan string {
 					c <- fmt.Sprintf("%s%s", blue(directory), file)
 				}
 			}
-			return
+
+			return nil // return err will stop walkDir
 		})
 	}()
 	return c

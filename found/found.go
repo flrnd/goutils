@@ -56,9 +56,6 @@ func found(keyword, location string) chan string {
 					c <- fmt.Sprintf("%s%s", blue(directory), file)
 				}
 			}
-			if err != nil {
-				fmt.Printf("%s\n", err)
-			}
 
 			return nil // return err will stop walkDir
 		})
